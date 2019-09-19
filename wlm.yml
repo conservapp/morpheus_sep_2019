@@ -1,0 +1,22 @@
+- hosts: "{{ hosts }}"
+  connection: local
+  gather_facts: no
+  user: root
+
+  tasks:
+    #- name: run cado-nfs server
+    #  shell: /usr/local/src/cado-nfs/installed/bin/cado-nfs-client.py --server=https://ip-10-0-0-5.us-west-2.compute.internal:40969 --certsha1=4cbda73eda56b236391d3aad395df1c9d1320c2b
+      #shell: "/usr/local/src/cado-nfs/installed/bin/cado-nfs-client.py --server=https://ip-10-0-0-5.us-west-2.compute.internal:40969"
+      #Info:HTTP server: You can start additional cado-nfs-client.py scripts with parameters: --server=https://ip-10-0-0-5.us-west-2.compute.internal:40969 --certsha1=4cbda73eda56b236391d3aad395df1c9d1320c2b
+      # async: 45
+    - name: Transfer executable script script
+      copy: src=/usr/local/src/cado-nfs/installed/bin/wlm.sh dest=/usr/local/src/cado-nfs/installed/bin/wlm.sh
+
+    - name: Execute the script
+      command: "nohup /usr/local/src/cado-nfs/installed/bin/wlm.sh &"
+      register: output
+      async: 28800
+      poll: 0
+
+    - debug: var=output.stdout_lines
+
